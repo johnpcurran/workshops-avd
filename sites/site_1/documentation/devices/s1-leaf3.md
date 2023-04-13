@@ -138,7 +138,7 @@ management api http-commands
 
 ```eos
 !
-username arista privilege 15 role network-admin secret sha512 $6$SpIy9WcwUoiZD1Wi$y8gzsAEHdZLFqgCGEMZCMF/les1Gn1kboY3aGaKyKyjWC7h7sKc5kxDyvG.Ong7ROMnGk1G93kMXNXQgH56re/
+username arista privilege 15 role network-admin secret sha512 $6$pemTW5Wb1N2t4dez$PztZMEZ/eEhGhW.n1djSgRQgteiTj68t.VQNAS6NsgT7xUST8ZGg9xWzr5fbsZNMh5gtSSwan2RRXl.iFk2uH/
 ```
 
 ## AAA Authorization
@@ -272,6 +272,7 @@ vlan internal order ascending range 1006 1199
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
 | 20 | Twenty | - |
+| 25 | Twentyfive | - |
 | 4094 | MLAG_PEER | MLAG |
 
 ## VLANs Device Configuration
@@ -280,6 +281,9 @@ vlan internal order ascending range 1006 1199
 !
 vlan 20
    name Twenty
+!
+vlan 25
+   name Twentyfive
 !
 vlan 4094
    name MLAG_PEER
@@ -297,8 +301,8 @@ vlan 4094
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | MLAG_PEER_s1-leaf4_Ethernet1 | *trunk | *2-4094 | *- | *['MLAG'] | 1 |
-| Ethernet2 | S1-SPINE1_Ethernet4 | *trunk | *20 | *- | *- | 2 |
-| Ethernet3 | S1-SPINE2_Ethernet4 | *trunk | *20 | *- | *- | 2 |
+| Ethernet2 | S1-SPINE1_Ethernet4 | *trunk | *20,25 | *- | *- | 2 |
+| Ethernet3 | S1-SPINE2_Ethernet4 | *trunk | *20,25 | *- | *- | 2 |
 | Ethernet4 | s1-host2_eth1 | *access | *20 | *- | *- | 4 |
 | Ethernet6 | MLAG_PEER_s1-leaf4_Ethernet6 | *trunk | *2-4094 | *- | *['MLAG'] | 1 |
 
@@ -343,7 +347,7 @@ interface Ethernet6
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel1 | MLAG_PEER_s1-leaf4_Po1 | switched | trunk | 2-4094 | - | ['MLAG'] | - | - | - | - |
-| Port-Channel2 | SPINES_Po4 | switched | trunk | 20 | - | - | - | - | 2 | - |
+| Port-Channel2 | SPINES_Po4 | switched | trunk | 20,25 | - | - | - | - | 2 | - |
 | Port-Channel4 | s1-host2 | switched | access | 20 | - | - | - | - | 4 | - |
 
 ### Port-Channel Interfaces Device Configuration
@@ -362,7 +366,7 @@ interface Port-Channel2
    description SPINES_Po4
    no shutdown
    switchport
-   switchport trunk allowed vlan 20
+   switchport trunk allowed vlan 20,25
    switchport mode trunk
    mlag 2
 !
